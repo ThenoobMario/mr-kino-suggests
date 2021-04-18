@@ -1,5 +1,6 @@
 const axios = require("axios");
 const Discord = require("discord.js");
+const msgEmbed = require("./msgEmbed.js");
 const baseReq = "https://api.themoviedb.org/3/tv/";
 
 module.exports = {
@@ -25,15 +26,9 @@ module.exports = {
                     .map((creator) => creator.name)
                     .join("\n");
                 console.log(creators);
-                const exampleEmbed = new Discord.MessageEmbed()
-                    .setColor("#0099ff")
-                    .setAuthor(
-                        "Recommendation of the day!",
-                        "https://i.ibb.co/PDnLkQp/vga.png",
-                        "https://www.youtube.com/user/VGApdpu"
-                    )
-                    .setTitle(data.original_name)
-                    .setURL(url)
+                const exampleEmbed = msgEmbed(data, url, img);
+
+                    exampleEmbed.setTitle(data.original_name)
                     .setDescription(
                         (data.tagline ? "_" +
                             data.tagline +
@@ -41,14 +36,12 @@ module.exports = {
                             (data.tagline ? "\n \n" : "") +
                             data.overview
                     )
-                    .setThumbnail(
-                        "https://www.themoviedb.org/t/p/w600_and_h900_bestv2" +
-                            data.poster_path
-                    )
                     .addFields(
                         {
                             name: "Created by:",
-                            value: creators,
+                            value: creators
+                                ? creators
+                                : "Unavailable",
                         },
                         {
                             name: "Runtime Per Episode:",
@@ -64,16 +57,6 @@ module.exports = {
                                 : "Unavailable",
                             inline: true,
                         }
-                    )
-                    .setImage(
-                        img
-                            ? img
-                            : "https://avatars.githubusercontent.com/u/22892193?s=460&u=96585117354875608d384137828c890a3b47a017&v=4"
-                    )
-                    .setTimestamp()
-                    .setFooter(
-                        "by shoo with love from VGA",
-                        "https://avatars.githubusercontent.com/u/22892193?s=460&u=96585117354875608d384137828c890a3b47a017&v=4"
                     );
                 console.log("****************here****************");
                 const chan =
